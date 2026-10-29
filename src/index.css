@@ -1,4 +1,4 @@
-
+@import 'leaflet/dist/leaflet.css';
 * {
   box-sizing: border-box;
 }
@@ -286,4 +286,95 @@ footer {
   .distance-number > span:first-child {
     font-size: 40px;
   }
+}
+
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.auth-logo {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #176b55;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.auth-card h1 {
+  margin: 16px 0 6px;
+}
+
+.auth-card h2 {
+  margin: 28px 0 8px;
+}
+
+.auth-description {
+  color: #667085;
+  line-height: 1.5;
+}
+
+.auth-card form label {
+  display: block;
+  margin: 18px 0 8px;
+}
+
+.auth-card form input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.auth-submit {
+  width: 100%;
+  margin-top: 24px;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #176b55;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.auth-submit:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.auth-error {
+  color: #b42318;
+  font-size: 14px;
+}
+
+.auth-switch {
+  margin-top: 22px;
+  text-align: center;
+}
+
+.auth-switch button {
+  border: none;
+  background: none;
+  color: #176b55;
+  font-weight: bold;
+  cursor: pointer;
 }
