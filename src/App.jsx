@@ -2,11 +2,55 @@
 import { useState } from 'react'
 import './index.css'
 
+const sampleLocations = {
+  nearby: {
+    name: 'Nearby location',
+    latitude: 40.7592,
+    longitude: -74.0060,
+  },
+  far: {
+    name: 'Far away location',
+    latitude: 40.8287,
+    longitude: -74.0060,
+  },
+}
+
+function calculateDistance(pointA, pointB) {
+  const earthRadiusMiles = 3958.8
+  const toRadians = (degrees) => (degrees * Math.PI) / 180
+
+  const lat1 = toRadians(pointA.latitude)
+  const lat2 = toRadians(pointB.latitude)
+  const latDifference = toRadians(pointB.latitude - pointA.latitude)
+  const lonDifference = toRadians(pointB.longitude - pointA.longitude)
+
+  const a =
+    Math.sin(latDifference / 2) ** 2 +
+    Math.cos(lat1) *
+      Math.cos(lat2) *
+      Math.sin(lonDifference / 2) ** 2
+
+  const safeA = Math.min(1, Math.max(0, a))
+  const centralAngle = 2 * Math.atan2(
+    Math.sqrt(safeA),
+    Math.sqrt(1 - safeA),
+  )
+
+  return earthRadiusMiles * centralAngle
+}
+
 function App() {
   const [familyMember, setFamilyMember] = useState('Little Brother')
   const [distanceLimit, setDistanceLimit] = useState(5)
-  const [distance, setDistance] = useState(3.2)
+  const [locationChoice, setLocationChoice] = useState('nearby')
 
+  const yourLocation = {
+    latitude: 40.7128,
+    longitude: -74.0060,
+  }
+
+  const familyLocation = sampleLocations[locationChoice]
+  const distance = calculateDistance(yourLocation, familyLocation)
   const isTooFar = distance > distanceLimit
 
   return (
@@ -23,7 +67,10 @@ function App() {
         <section className="welcome">
           <p className="eyebrow">FAMILY LOCATION</p>
           <h1>Peace of mind, wherever they go.</h1>
-          <p>Keep an eye on your loved ones and know when they move beyond your chosen distance.</p>
+          <p>
+            See how distance calculations can help you know when a family
+            member moves beyond your chosen limit.
+          </p>
         </section>
 
         <section className="card">
@@ -51,11 +98,13 @@ function App() {
           </div>
 
           <div className="distance-number">
-            <span>{distance.toFixed(1)}</span>
+            <span>{distance.toFixed(2)}</span>
             <span className="miles">miles away</span>
           </div>
 
-          <p className="muted">Your distance limit is {distanceLimit} miles.</p>
+          <p className="muted">
+            Calculated from the two sample GPS coordinates.
+          </p>
 
           <div className="distance-control">
             <label htmlFor="distanceLimit">Distance limit</label>
@@ -76,18 +125,19 @@ function App() {
             <span>20 miles</span>
           </div>
 
-          {isTooFar && (
-            <div className="alert">
+          {isTooFar ? (
+            <div className="alert" role="alert">
               <span className="alert-icon">!</span>
               <div>
                 <h3>Distance alert</h3>
-                <p>{familyMember} is {distance.toFixed(1)} miles away, beyond your {distanceLimit}-mile limit.</p>
+                <p>
+                  {familyMember} is {distance.toFixed(2)} miles away,
+                  beyond your {distanceLimit}-mile limit.
+                </p>
               </div>
             </div>
-          )}
-
-          {!isTooFar && (
-            <div className="safe-message">
+          ) : (
+            <div className="safe-message" role="status">
               <span>✓</span>
               {familyMember} is within your distance limit.
             </div>
@@ -95,25 +145,33 @@ function App() {
         </section>
 
         <section className="card demo-card">
-          <h2>Try the distance alert</h2>
-          <p className="muted">Change the sample distance to see how the alert works.</p>
+          <h2>Test different locations</h2>
+          <p className="muted">
+            Choose a sample location to see the distance calculation and
+            alert update.
+          </p>
 
-          <label htmlFor="sampleDistance">
-            Sample distance: {distance.toFixed(1)} miles
-          </label>
-          <input
-            id="sampleDistance"
-            type="range"
-            min="0"
-            max="20"
-            step="0.1"
-            value={distance}
-            onChange={(event) => setDistance(Number(event.target.value))}
-          />
-          <div className="range-labels">
-            <span>0 miles</span>
-            <span>20 miles</span>
-          </div>
+          <label htmlFor="sampleLocation">Family member's sample location</label>
+          <select
+            id="sampleLocation"
+            value={locationChoice}
+            onChange={(event) => setLocationChoice(event.target.value)}
+          >
+            <option value="nearby">Nearby — about 3.2 miles</option>
+            <option value="far">Far away — about 8 miles</option>
+          </select>
+
+          <h3>Sample coordinates</h3>
+          <p className="muted">
+            Your location: {yourLocation.latitude}, {yourLocation.longitude}
+          </p>
+          <p className="muted">
+            Family member: {familyLocation.latitude},{' '}
+            {familyLocation.longitude}
+          </p>
+          <p className="muted">
+            These coordinates are examples, not anyone's actual location.
+          </p>
         </section>
 
         <footer>
